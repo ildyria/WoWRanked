@@ -43,6 +43,8 @@ int main(int argc, char const *argv[])
 
     std::vector<unsigned long> results = std::vector<unsigned long>(24,0);
 
+    std::vector<unsigned long> results_end = std::vector<unsigned long>(24,0);
+
     Progress* p = new Progress(levels);
 
     for (unsigned long j = 0; j < simulations_num; ++j) {
@@ -67,16 +69,27 @@ int main(int argc, char const *argv[])
         }
 //        printf("%2i (%i / %i) \n",p->get_rank(),p->get_star(),p->get_max_stars());
         results[p->get_max_rank()]++;
+        results_end[p->get_rank()]++;
     }
 
     unsigned long sim_num = 0;
 
+    printf("max rank optained: \n");
     for (i = 1; i < 24; ++i) {
         sim_num += results[i];
         printf("rank %2i : %7li (%3li%%) - %8li (%3li%%)\n",i,results[i],results[i]/divide_by,sim_num,sim_num/divide_by);
     }
 
+    printf("\n");
+    sim_num = 0;
+    printf("rank optained after %li battles.\n", max_games);
+    for (i = 1; i < 24; ++i) {
+        sim_num += results_end[i];
+        printf("rank %2i : %7li (%3li%%) - %8li (%3li%%)\n",i,results_end[i],results_end[i]/divide_by,sim_num,sim_num/divide_by);
+    }
+
 	t.stop();
+    printf("\n");
 	printf("done in : %.3lf s\n", t.resultms()/1000.0);
 	printf("------------------------------------------------------------\n");
 
