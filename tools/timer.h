@@ -3,6 +3,7 @@
 
 using std::chrono::time_point;
 using std::chrono::system_clock;
+using std::chrono::seconds;
 using std::chrono::milliseconds;
 using std::chrono::microseconds;
 using std::chrono::nanoseconds;
@@ -39,6 +40,16 @@ public:
 	long resultmus()
 	{
 		return duration_cast<microseconds>(end_time - start_time).count();
+	}
+
+	long resultms()
+	{
+		return duration_cast<milliseconds>(end_time - start_time).count();
+	}
+
+	long results()
+	{
+		return duration_cast<seconds>(end_time - start_time).count();
 	}
 
 	long resultns()

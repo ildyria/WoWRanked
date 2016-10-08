@@ -1,9 +1,5 @@
 #include <iostream>
-#include <stdio.h>
-#include <string>
-#include "omp.h"
 #include <vector>
-#include "includes/typedef.h"
 #include "tools/timer.h"
 #include "tools/random.h"
 #include "Rank.h"
@@ -15,12 +11,12 @@ int main(int argc, char const *argv[])
 	printf("\t But remember, all code is guilty until proven innocent !\n");
 	printf("\t \tWhen in doubt, use Brute force ! - Ken Thompson\n \n");
 
-    unsigned long simulations_num = 1000000;
-    unsigned long max_games = 200;
-
-	prog_options options = read_args(argc, argv);
+    const unsigned long simulations_num = 10000000;
+    const unsigned long divide_by = simulations_num / 100;
+    const unsigned long max_games = 100;
 
 	Timer t = Timer();
+    t.start();
 	Random::I(0);
 	int i;
 	std::vector<Rank> levels = std::vector<Rank>(24);
@@ -45,13 +41,12 @@ int main(int argc, char const *argv[])
 	}
 
 
-    std::vector<Progress> progrsses = std::vector<Progress>(options.num_proc_to_use, Progress(levels));
-
     std::vector<unsigned long> results = std::vector<unsigned long>(24,0);
+
+    Progress* p = new Progress(levels);
 
     for (unsigned long j = 0; j < simulations_num; ++j) {
         unsigned long k = 0;
-        Progress* p = &progrsses[omp_get_thread_num()];
         p->init();
         while (k < max_games && !p->is_rank1()) {
 
@@ -70,19 +65,19 @@ int main(int argc, char const *argv[])
             }
             k++;
         }
-        printf("%2i (%i / %i) \n",p->get_rank(),p->get_star(),p->get_max_stars());
+//        printf("%2i (%i / %i) \n",p->get_rank(),p->get_star(),p->get_max_stars());
         results[p->get_max_rank()]++;
     }
 
     unsigned long sim_num = 0;
+
     for (i = 0; i < 24; ++i) {
         sim_num += results[i];
-        printf("rank %2i : %6li (%3li%%) - %7li (%3li%%)\n",i,results[i],results[i]/10000,sim_num,sim_num/10000);
+        printf("rank %2i : %7li (%3li%%) - %8li (%3li%%)\n",i,results[i],results[i]/divide_by,sim_num,sim_num/divide_by);
     }
 
-
 	t.stop();
-	printf("done in : %.3lf ms\n", t.resultmus()/1000000.0);
+	printf("done in : %.3lf s\n", t.resultms()/1000.0);
 	printf("------------------------------------------------------------\n");
 
 	return 0;

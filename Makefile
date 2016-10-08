@@ -1,7 +1,7 @@
 CC=g++
 BIN=bin
 INCLUDE=
-CFLAGS=-c -pedantic -O3 -Wall -Wextra -std=c++14 $(INCLUDE)
+CFLAGS=-c -pedantic -O3 -Wall -Wextra -Wno-unused-parameter -std=c++14 $(INCLUDE)
 LDFLAGS=-std=c++14
 SOURCES=$(wildcard tools/*.cpp) main.cpp
 OBJECTS=$(addprefix $(BIN)/, $(notdir $(SOURCES:.cpp=.o)))
