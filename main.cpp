@@ -71,7 +71,7 @@ int main(int argc, char const *argv[])
 
     unsigned long sim_num = 0;
 
-    for (i = 0; i < 24; ++i) {
+    for (i = 1; i < 24; ++i) {
         sim_num += results[i];
         printf("rank %2i : %7li (%3li%%) - %8li (%3li%%)\n",i,results[i],results[i]/divide_by,sim_num,sim_num/divide_by);
     }
